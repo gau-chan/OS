@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS風のサイト</title>
+    <title>OS風デスクトップ</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* スクロールバーを非表示 */
+            overflow: hidden;
         }
 
         /* 背景動画のスタイル */
@@ -18,234 +18,113 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 動画を画面全体にフィットさせる */
-            z-index: -1; /* 他のコンテンツの後ろに配置 */
+            object-fit: cover;
+            z-index: -1;
+            display: none; /* 初期状態では非表示 */
         }
 
-        #taskbar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 40px;
-            background-color: rgba(51, 51, 51, 0.8); /* タスクバーの透明度を調整 */
+        /* 再生ボタン */
+        #play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .taskbar-item {
-            margin-right: 20px;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
             cursor: pointer;
+            z-index: 100;
         }
 
-        #desktop {
-            position: relative;
-            height: calc(100vh - 40px);
-            display: flex;
-            flex-wrap: wrap;
-            padding: 10px;
-        }
-
-        .icon {
-            width: 80px;
-            text-align: center;
-            margin: 10px;
-            cursor: pointer;
-        }
-
-        .icon img {
-            width: 50px;
-            height: 50px;
-        }
-
-        .icon p {
-            color: white;
-            margin: 5px 0 0 0;
-        }
-
+        /* ウィンドウの基本スタイル */
         .window {
             position: absolute;
             width: 300px;
-            height: 300px;
-            background-color: white;
-            border: 1px solid #999;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            height: 200px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             z-index: 10;
+            padding: 10px;
         }
 
+        /* ウィンドウのヘッダー */
         .window-header {
-            background-color: #0078d7;
+            cursor: move;
+            background-color: #333;
             color: white;
             padding: 5px;
-            cursor: move;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
         }
 
-        .close-btn {
-            background-color: red;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .window-content {
-            padding: 10px;
-            overflow: auto;
-        }
-
-        /* CMDプロンプトスタイル */
-        .cmd-output {
-            background-color: #000;
-            color: #0f0;
-            padding: 5px;
-            font-family: monospace;
-            height: 220px;
+        /* CMDプロンプトのスタイル */
+        #cmdOutput {
+            background-color: black;
+            color: white;
+            height: 150px;
             overflow-y: auto;
+            padding: 5px;
         }
 
-        .cmd-input {
+        #cmdInput {
             width: 100%;
-            background-color: #222;
-            color: #0f0;
-            border: none;
-            outline: none;
+            box-sizing: border-box;
             padding: 5px;
-            font-family: monospace;
         }
     </style>
 </head>
 <body>
 
-<!-- 背景動画 -->
+    <!-- 背景動画 -->
     <video id="background-video" muted loop>
-        <source src="mylivewallpapers.com-Hatsune-Miku.mp4" type="video/mp4">
-        <source src="background.webm" type="video/webm"> <!-- WebM形式も追加 -->
+        <source src="background.mp4" type="video/mp4">
+        <source src="background.webm" type="video/webm">
         お使いのブラウザは動画タグに対応していません。
     </video>
 
     <!-- 再生ボタン -->
-    <button id="play-button" onclick="playVideo()">背景を動かす</button>
+    <button id="play-button" onclick="playVideo()">背景動画を再生</button>
 
-    <div id="content">
+    <!-- ウィンドウ -->
+    <div class="window" id="cmdWindow" style="top: 100px; left: 100px;">
+        <div class="window-header">CMDプロンプト</div>
+        <div id="cmdOutput"></div>
+        <input type="text" id="cmdInput" placeholder="コマンドを入力" onkeydown="handleCommand(event)">
+    </div>
 
+    <div class="window" id="explorerWindow" style="top: 200px; left: 400px;">
+        <div class="window-header">ファイルエクスプローラー</div>
+        <p>ファイル一覧などを表示</p>
+    </div>
+
+    <div class="window" id="notepadWindow" style="top: 300px; left: 700px;">
+        <div class="window-header">メモ帳</div>
+        <textarea style="width: 100%; height: 150px;"></textarea>
+    </div>
+
+    <div class="window" id="settingsWindow" style="top: 400px; left: 1000px;">
+        <div class="window-header">設定</div>
+        <p>各種設定項目</p>
     </div>
 
     <script>
+        // 背景動画を再生
         function playVideo() {
             var video = document.getElementById('background-video');
             var playButton = document.getElementById('play-button');
-            
-            // 動画を再生し、表示
             video.style.display = 'block';
             video.play();
-            
-            // 再生ボタンを非表示にする
             playButton.style.display = 'none';
         }
-    </script>
 
-
-    <div id="desktop">
-        <!-- CMDプロンプトアイコン -->
-        <div class="icon" onclick="openWindow('CMDプロンプト', 100, 100, 'cmd')">
-            <img src="https://via.placeholder.com/50/ff0000/ffffff?text=CMD" alt="CMDプロンプト">
-            <p>CMDプロンプト</p>
-        </div>
-        
-        <!-- ファイルエクスプローラーアイコン -->
-        <div class="icon" onclick="openWindow('ファイルエクスプローラー', 200, 100, 'explorer')">
-            <img src="https://via.placeholder.com/50/00ff00/ffffff?text=File" alt="ファイルエクスプローラー">
-            <p>ファイルエクスプローラー</p>
-        </div>
-
-        <!-- メモ帳アイコン -->
-        <div class="icon" onclick="openWindow('メモ帳', 300, 100, 'notepad')">
-            <img src="https://via.placeholder.com/50/0000ff/ffffff?text=Note" alt="メモ帳">
-            <p>メモ帳</p>
-        </div>
-
-        <!-- 設定アイコン -->
-        <div class="icon" onclick="openWindow('設定', 400, 100, 'settings')">
-            <img src="https://via.placeholder.com/50/ffff00/ffffff?text=Settings" alt="設定">
-            <p>設定</p>
-        </div>
-    </div>
-
-    <div id="taskbar">
-        <div class="taskbar-item" onclick="openWindow('CMDプロンプト', 100, 100, 'cmd')">CMDプロンプト</div>
-        <div class="taskbar-item" onclick="openWindow('ファイルエクスプローラー', 200, 100, 'explorer')">ファイルエクスプローラー</div>
-        <div class="taskbar-item" onclick="openWindow('メモ帳', 300, 100, 'notepad')">メモ帳</div>
-        <div class="taskbar-item" onclick="openWindow('設定', 400, 100, 'settings')">設定</div>
-    </div>
-
-    <script>
-        let zIndexCounter = 10;
-
-        // ウィンドウを開く関数
-        function openWindow(appName, posX, posY, appType) {
-            const windowElement = document.createElement('div');
-            windowElement.className = 'window';
-            windowElement.style.top = `${posY}px`;
-            windowElement.style.left = `${posX}px`;
-            windowElement.style.zIndex = zIndexCounter++;
-
-            // ウィンドウのヘッダー部分
-            const windowHeader = document.createElement('div');
-            windowHeader.className = 'window-header';
-            windowHeader.innerHTML = `
-                <span>${appName}</span>
-                <div class="close-btn" onclick="this.parentElement.parentElement.remove()">×</div>
-            `;
-
-            // アプリタイプに応じた内容を設定
-            const windowContent = document.createElement('div');
-            windowContent.className = 'window-content';
-
-            if (appType === 'cmd') {
-                windowContent.innerHTML = `
-                    <h3>CMDプロンプト</h3>
-                    <div class="cmd-output" id="cmdOutput"></div>
-                    <input type="text" class="cmd-input" id="cmdInput" placeholder="コマンドを入力..." onkeydown="handleCommand(event, 'cmd')">
-                `;
-            } else if (appType === 'explorer') {
-                windowContent.innerHTML = `
-                    <h3>ファイルエクスプローラー</h3>
-                    <p>ここにファイルやフォルダの内容を表示します。</p>
-                `;
-            } else if (appType === 'notepad') {
-                windowContent.innerHTML = `
-                    <h3>メモ帳</h3>
-                    <textarea rows="10" style="width: 100%;"></textarea>
-                `;
-            } else if (appType === 'settings') {
-                windowContent.innerHTML = `
-                    <h3>設定</h3>
-                    <p>ここにアプリケーションの設定を表示します。</p>
-                `;
-            }
-
-            windowElement.appendChild(windowHeader);
-            windowElement.appendChild(windowContent);
-            document.getElementById('desktop').appendChild(windowElement);
-
-            makeDraggable(windowElement);
-        }
-
-        // ドラッグ機能
+        // ウィンドウをドラッグ可能にする
         function makeDraggable(element) {
             let isDragging = false;
             let offsetX, offsetY;
 
-            const header = element.querySelector('.window-header');
-
-            header.addEventListener('mousedown', function (e) {
+            element.querySelector('.window-header').addEventListener('mousedown', function (e) {
                 isDragging = true;
                 offsetX = e.clientX - element.getBoundingClientRect().left;
                 offsetY = e.clientY - element.getBoundingClientRect().top;
@@ -262,45 +141,40 @@
                 isDragging = false;
             });
         }
-// コマンド処理
+
+        // すべてのウィンドウにドラッグ機能を追加
+        document.querySelectorAll('.window').forEach(makeDraggable);
+
+        // コマンド入力処理
         function handleCommand(event) {
             if (event.key === 'Enter') {
-                const command = document.getElementById('cmdInput').value;
+                const input = document.getElementById('cmdInput');
                 const output = document.getElementById('cmdOutput');
-                output.innerHTML += `<div>> ${command}</div>`;
-                
-                // コマンドの処理
-                switch (command.toLowerCase()) {
-                    case 'help':
-                        output.innerHTML += `<div>コマンド一覧: help, ping, clear</div>`;
-                        break;
-                    case 'clear':
-                        output.innerHTML = ''; // 出力エリアをクリア
-                        break;
-                    case command.match(/^ping\s+(\S+)$/)?.input:
-                        const address = command.match(/^ping\s+(\S+)$/)[1];
-                        simulatePing(address, output);
-                        break;
-                    default:
-                        output.innerHTML += `<div>未知のコマンド: ${command}</div>`;
-                }
-                
-                // 入力フィールドをクリア
-                document.getElementById('cmdInput').value = '';
-                output.scrollTop = output.scrollHeight; // スクロールを最新に
-            }
 
-                  // Pingコマンドの模擬実行
-        function simulatePing(address, output) {
-            output.innerHTML += `<div> ${address} に ping を実行中...</div>`;
-            setTimeout(() => {
-                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=1 ttl=64 time=0.123 ms</div>`;
-                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=2 ttl=64 time=0.115 ms</div>`;
-                output.innerHTML += `<div>完了: ${address} の ping 結果。</div>`;
-            }, 1000); // 1秒後に結果を表示
-        }
+                const command = input.value;
+                output.innerHTML += `<div>${command}</div>`; // 入力したコマンドを表示
+
+                // コマンドに応じた処理
+                if (command === 'ping') {
+                    output.innerHTML += `<div>--- ping 統計 ---</div>`;
+                    setTimeout(() => {
+                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
+                    }, 1000);
+                } else if (command.startsWith('ping ')) {
+                    const address = command.split(' ')[1];
+                    output.innerHTML += `<div>--- ${address} ping 統計 ---</div>`;
+                    setTimeout(() => {
+                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
+                    }, 1000);
+                } else {
+                    output.innerHTML += `<div>未定義のコマンド: ${command}</div>`;
+                }
+
+                input.value = ''; // 入力フィールドをクリア
             }
         }
     </script>
+
 </body>
 </html>
+
