@@ -107,6 +107,26 @@
         .button:hover {
             background-color: #0056a3;
         }
+
+        /* CMDプロンプトスタイル */
+        .cmd-output {
+            background-color: #000;
+            color: #0f0;
+            padding: 5px;
+            font-family: monospace;
+            height: 220px;
+            overflow-y: auto;
+        }
+
+        .cmd-input {
+            width: 100%;
+            background-color: #222;
+            color: #0f0;
+            border: none;
+            outline: none;
+            padding: 5px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -126,6 +146,10 @@
             <img src="https://via.placeholder.com/50" alt="TODOリスト">
             <p>TODOリスト</p>
         </div>
+        <div class="icon" onclick="openWindow('CMDプロンプト', 400, 400)">
+            <img src="https://via.placeholder.com/50" alt="CMDプロンプト">
+            <p>CMDプロンプト</p>
+        </div>
     </div>
 
     <!-- タスクバー -->
@@ -133,6 +157,7 @@
         <div class="taskbar-item" onclick="openWindow('メモ帳', 50, 50)">メモ帳</div>
         <div class="taskbar-item" onclick="openWindow('電卓', 400, 50)">電卓</div>
         <div class="taskbar-item" onclick="openWindow('TODOリスト', 50, 400)">TODOリスト</div>
+        <div class="taskbar-item" onclick="openWindow('CMDプロンプト', 400, 400)">CMDプロンプト</div>
     </div>
 
     <script>
@@ -178,6 +203,12 @@
                     <input type="text" class="input-field" id="todoInput" placeholder="やることを入力...">
                     <button class="button" onclick="addTodo()">追加</button>
                     <ul id="todoList"></ul>
+                `;
+            } else if (appName === 'CMDプロンプト') {
+                windowContent.innerHTML = `
+                    <h3>CMDプロンプト</h3>
+                    <div class="cmd-output" id="cmdOutput"></div>
+                    <input type="text" class="cmd-input" id="cmdInput" placeholder="コマンドを入力..." onkeydown="handleCommand(event)">
                 `;
             }
 
@@ -234,6 +265,44 @@
                 document.getElementById('todoList').appendChild(li);
                 document.getElementById('todoInput').value = ''; // 入力フィールドをクリア
             }
+        }
+
+        // CMDプロンプトでコマンドを処理する関数
+        function handleCommand(event) {
+            if (event.key === 'Enter') {
+                const command = document.getElementById('cmdInput').value;
+                const output = document.getElementById('cmdOutput');
+                output.innerHTML += `<div>> ${command}</div>`;
+                
+                // コマンドの処理
+                switch (command.toLowerCase()) {
+                    case 'help':
+                        output.innerHTML += `<div>コマンド一覧: help, clear, ping [アドレス]</div>`;
+                        break;
+                    case 'clear':
+                        output.innerHTML = ''; // 出力エリアをクリア
+                        break;
+                    case command.match(/^ping\s+\w+$/)?.input:
+                        const ipAddress = command.split(' ')[1]; // pingの引数を取得
+                        ping(ipAddress, output);
+                        break;
+                    default:
+                        output.innerHTML += `<div>未知のコマンド: ${command}</div>`;
+                }
+
+                // 入力フィールドをクリア
+                document.getElementById('cmdInput').value = '';
+                output.scrollTop = output.scrollHeight; // スクロールを最新に
+            }
+        }
+
+        // Ping機能
+        function ping(ipAddress, output) {
+            output.innerHTML += `<div>${ipAddress} に ping を送信中...</div>`;
+            setTimeout(() => {
+                const randomTime = Math.floor(Math.random() * 100) + 20; // ランダムな応答時間
+                output.innerHTML += `<div>${ipAddress} からの応答: タイム = ${randomTime}ms</div>`;
+            }, 1000); // 1秒後に応答を模擬
         }
     </script>
 
