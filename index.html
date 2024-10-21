@@ -114,15 +114,15 @@
     <!-- デスクトップ部分 -->
     <div id="desktop">
         <!-- アプリアイコン -->
-        <div class="icon" onclick="openWindow('メモ帳')">
+        <div class="icon" onclick="openWindow('メモ帳', 50, 50)">
             <img src="https://via.placeholder.com/50" alt="メモ帳">
             <p>メモ帳</p>
         </div>
-        <div class="icon" onclick="openWindow('電卓')">
+        <div class="icon" onclick="openWindow('電卓', 400, 50)">
             <img src="https://via.placeholder.com/50" alt="電卓">
             <p>電卓</p>
         </div>
-        <div class="icon" onclick="openWindow('TODOリスト')">
+        <div class="icon" onclick="openWindow('TODOリスト', 50, 400)">
             <img src="https://via.placeholder.com/50" alt="TODOリスト">
             <p>TODOリスト</p>
         </div>
@@ -130,20 +130,20 @@
 
     <!-- タスクバー -->
     <div id="taskbar">
-        <div class="taskbar-item" onclick="openWindow('メモ帳')">メモ帳</div>
-        <div class="taskbar-item" onclick="openWindow('電卓')">電卓</div>
-        <div class="taskbar-item" onclick="openWindow('TODOリスト')">TODOリスト</div>
+        <div class="taskbar-item" onclick="openWindow('メモ帳', 50, 50)">メモ帳</div>
+        <div class="taskbar-item" onclick="openWindow('電卓', 400, 50)">電卓</div>
+        <div class="taskbar-item" onclick="openWindow('TODOリスト', 50, 400)">TODOリスト</div>
     </div>
 
     <script>
         let zIndexCounter = 10;
 
         // ウィンドウを開く関数
-        function openWindow(appName) {
+        function openWindow(appName, posX, posY) {
             const windowElement = document.createElement('div');
             windowElement.className = 'window';
-            windowElement.style.top = `${Math.random() * (window.innerHeight - 350)}px`;
-            windowElement.style.left = `${Math.random() * (window.innerWidth - 300)}px`;
+            windowElement.style.top = `${posY}px`; // 固定位置を指定
+            windowElement.style.left = `${posX}px`; // 固定位置を指定
             windowElement.style.zIndex = zIndexCounter++;
 
             // ウィンドウのヘッダー部分
