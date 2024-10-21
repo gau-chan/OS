@@ -13,8 +13,18 @@
   </div>
 
   <div class="taskbar">
-    <div class="start-button">Start</div>
+    <div class="start-button" onclick="toggleStartMenu()">Start</div>
     <div class="taskbar-item">Time: <span id="clock">12:34 PM</span></div>
+  </div>
+
+  <!-- スタートメニュー -->
+  <div id="start-menu" class="start-menu hidden">
+    <ul>
+      <li onclick="openWindow()">📁 Programs</li>
+      <li>⚙️ Settings</li>
+      <li>🔒 Lock</li>
+      <li>🔌 Shut Down</li>
+    </ul>
   </div>
 
   <div id="window" class="window hidden">
