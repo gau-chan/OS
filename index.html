@@ -90,24 +90,6 @@
             overflow: auto;
         }
 
-        /* 入力フィールドやボタンのスタイル */
-        .input-field {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .button {
-            padding: 5px 10px;
-            background-color: #0078d7;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #0056a3;
-        }
-
         /* CMDプロンプトスタイル */
         .cmd-output {
             background-color: #000;
@@ -131,32 +113,14 @@
 </head>
 <body>
 
-    <!-- デスクトップ部分 -->
     <div id="desktop">
-        <!-- アプリアイコン -->
-        <div class="icon" onclick="openWindow('メモ帳', 50, 50)">
-            <img src="https://via.placeholder.com/50" alt="メモ帳">
-            <p>メモ帳</p>
-        </div>
-        <div class="icon" onclick="openWindow('電卓', 400, 50)">
-            <img src="https://via.placeholder.com/50" alt="電卓">
-            <p>電卓</p>
-        </div>
-        <div class="icon" onclick="openWindow('TODOリスト', 50, 400)">
-            <img src="https://via.placeholder.com/50" alt="TODOリスト">
-            <p>TODOリスト</p>
-        </div>
         <div class="icon" onclick="openWindow('CMDプロンプト', 400, 400)">
             <img src="https://via.placeholder.com/50" alt="CMDプロンプト">
             <p>CMDプロンプト</p>
         </div>
     </div>
 
-    <!-- タスクバー -->
     <div id="taskbar">
-        <div class="taskbar-item" onclick="openWindow('メモ帳', 50, 50)">メモ帳</div>
-        <div class="taskbar-item" onclick="openWindow('電卓', 400, 50)">電卓</div>
-        <div class="taskbar-item" onclick="openWindow('TODOリスト', 50, 400)">TODOリスト</div>
         <div class="taskbar-item" onclick="openWindow('CMDプロンプト', 400, 400)">CMDプロンプト</div>
     </div>
 
@@ -167,8 +131,8 @@
         function openWindow(appName, posX, posY) {
             const windowElement = document.createElement('div');
             windowElement.className = 'window';
-            windowElement.style.top = `${posY}px`; // 固定位置を指定
-            windowElement.style.left = `${posX}px`; // 固定位置を指定
+            windowElement.style.top = `${posY}px`;
+            windowElement.style.left = `${posX}px`;
             windowElement.style.zIndex = zIndexCounter++;
 
             // ウィンドウのヘッダー部分
@@ -179,38 +143,14 @@
                 <div class="close-btn" onclick="this.parentElement.parentElement.remove()">×</div>
             `;
 
-            // ウィンドウの内容部分
+            // CMDプロンプトの内容
             const windowContent = document.createElement('div');
             windowContent.className = 'window-content';
-
-            // アプリケーションの具体的な内容を設定
-            if (appName === 'メモ帳') {
-                windowContent.innerHTML = `
-                    <h3>メモ帳</h3>
-                    <textarea rows="8" class="input-field" placeholder="メモを入力..."></textarea>
-                    <button class="button" onclick="alert('メモが保存されました')">保存</button>
-                `;
-            } else if (appName === '電卓') {
-                windowContent.innerHTML = `
-                    <h3>電卓</h3>
-                    <input type="text" class="input-field" id="calcInput" placeholder="計算式を入力...">
-                    <button class="button" onclick="calculate()">計算</button>
-                    <p id="calcResult"></p>
-                `;
-            } else if (appName === 'TODOリスト') {
-                windowContent.innerHTML = `
-                    <h3>TODOリスト</h3>
-                    <input type="text" class="input-field" id="todoInput" placeholder="やることを入力...">
-                    <button class="button" onclick="addTodo()">追加</button>
-                    <ul id="todoList"></ul>
-                `;
-            } else if (appName === 'CMDプロンプト') {
-                windowContent.innerHTML = `
-                    <h3>CMDプロンプト</h3>
-                    <div class="cmd-output" id="cmdOutput"></div>
-                    <input type="text" class="cmd-input" id="cmdInput" placeholder="コマンドを入力..." onkeydown="handleCommand(event)">
-                `;
-            }
+            windowContent.innerHTML = `
+                <h3>CMDプロンプト</h3>
+                <div class="cmd-output" id="cmdOutput"></div>
+                <input type="text" class="cmd-input" id="cmdInput" placeholder="コマンドを入力..." onkeydown="handleCommand(event)">
+            `;
 
             windowElement.appendChild(windowHeader);
             windowElement.appendChild(windowContent);
@@ -219,7 +159,7 @@
             makeDraggable(windowElement);
         }
 
-        // ウィンドウをドラッグ可能にする関数
+        // ドラッグ機能
         function makeDraggable(element) {
             let isDragging = false;
             let offsetX, offsetY;
@@ -245,29 +185,7 @@
             });
         }
 
-        // 電卓の計算機能
-        function calculate() {
-            const input = document.getElementById('calcInput').value;
-            try {
-                const result = eval(input);
-                document.getElementById('calcResult').innerText = `結果: ${result}`;
-            } catch (e) {
-                document.getElementById('calcResult').innerText = '無効な式です';
-            }
-        }
-
-        // TODOリストに項目を追加する機能
-        function addTodo() {
-            const input = document.getElementById('todoInput').value;
-            if (input) {
-                const li = document.createElement('li');
-                li.textContent = input;
-                document.getElementById('todoList').appendChild(li);
-                document.getElementById('todoInput').value = ''; // 入力フィールドをクリア
-            }
-        }
-
-        // CMDプロンプトでコマンドを処理する関数
+        // コマンド処理
         function handleCommand(event) {
             if (event.key === 'Enter') {
                 const command = document.getElementById('cmdInput').value;
@@ -277,14 +195,14 @@
                 // コマンドの処理
                 switch (command.toLowerCase()) {
                     case 'help':
-                        output.innerHTML += `<div>コマンド一覧: help, clear, ping [アドレス]</div>`;
+                        output.innerHTML += `<div>コマンド一覧: help, ping, clear</div>`;
                         break;
                     case 'clear':
                         output.innerHTML = ''; // 出力エリアをクリア
                         break;
-                    case command.match(/^ping\s+\w+$/)?.input:
-                        const ipAddress = command.split(' ')[1]; // pingの引数を取得
-                        ping(ipAddress, output);
+                    case command.match(/^ping\s+(\S+)$/)?.input:
+                        const address = command.match(/^ping\s+(\S+)$/)[1];
+                        simulatePing(address, output);
                         break;
                     default:
                         output.innerHTML += `<div>未知のコマンド: ${command}</div>`;
@@ -296,13 +214,14 @@
             }
         }
 
-        // Ping機能
-        function ping(ipAddress, output) {
-            output.innerHTML += `<div>${ipAddress} に ping を送信中...</div>`;
+        // Pingコマンドの模擬実行
+        function simulatePing(address, output) {
+            output.innerHTML += `<div> ${address} に ping を実行中...</div>`;
             setTimeout(() => {
-                const randomTime = Math.floor(Math.random() * 100) + 20; // ランダムな応答時間
-                output.innerHTML += `<div>${ipAddress} からの応答: タイム = ${randomTime}ms</div>`;
-            }, 1000); // 1秒後に応答を模擬
+                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=1 ttl=64 time=0.123 ms</div>`;
+                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=2 ttl=64 time=0.115 ms</div>`;
+                output.innerHTML += `<div>完了: ${address} の ping 結果。</div>`;
+            }, 1000); // 1秒後に結果を表示
         }
     </script>
 
