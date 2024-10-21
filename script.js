@@ -8,17 +8,6 @@ function closeWindow() {
   document.getElementById('window').classList.add('hidden');
 }
 
-// ボタンを動かす
-function moveButton() {
-  const button = document.getElementById('move-button');
-  button.style.position = 'absolute';
-  button.style.top = Math.random() * 200 + 'px';
-  button.style.left = Math.random() * 200 + 'px';
-
-  // エラー音を再生
-  document.getElementById('error-sound').play();
-}
-
 // 時刻を表示する
 function updateClock() {
   const now = new Date();
