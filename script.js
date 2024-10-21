@@ -1,11 +1,11 @@
-// ウィンドウを開く
-function openWindow() {
-  document.getElementById('window').classList.remove('hidden');
+// アプリケーションを開く
+function openApp(appId) {
+  document.getElementById(appId).classList.remove('hidden');
 }
 
-// ウィンドウを閉じる
-function closeWindow() {
-  document.getElementById('window').classList.add('hidden');
+// アプリケーションを閉じる
+function closeApp(appId) {
+  document.getElementById(appId).classList.add('hidden');
 }
 
 // スタートメニューの表示/非表示を切り替える
@@ -20,9 +20,17 @@ function updateClock() {
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const timeString = `${hours % 12 || 12}:${minutes < 10 ? '0' + minutes : minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
-  document.getElementById('clock').innerText = timeString;
+  document.getElementById('clock').textContent = timeString;
+}
+setInterval(updateClock, 1000);
+
+// 電卓アプリのロジック
+let calcInput = '';
+
+function addToCalc(value) {
+  calcInput += value;
+  document.getElementById('calcDisplay').value = calcInput;
 }
 
-// 時刻を1秒ごとに更新
-setInterval(updateClock, 1000);
-updateClock();  // ページ読み込み時に時刻を即時表示
+function clearCalc() {
+ 
