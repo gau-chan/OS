@@ -124,11 +124,34 @@
 <body>
 
 <!-- 背景動画 -->
-    <video id="background-video" autoplay muted loop>
-        <source src="mylivewallpapers.com-Hatsune-Miku.mp4" type="video/mp4">
+    <video id="background-video" muted loop>
+        <source src="background.mp4" type="video/mp4">
         <source src="background.webm" type="video/webm"> <!-- WebM形式も追加 -->
         お使いのブラウザは動画タグに対応していません。
     </video>
+
+    <!-- 再生ボタン -->
+    <button id="play-button" onclick="playVideo()">再生</button>
+
+    <div id="content">
+        <h1>背景動画のデモ</h1>
+        <p>このページでは背景に動画を設定していますが、再生ボタンを押して開始してください。</p>
+    </div>
+
+    <script>
+        function playVideo() {
+            var video = document.getElementById('background-video');
+            var playButton = document.getElementById('play-button');
+            
+            // 動画を再生し、表示
+            video.style.display = 'block';
+            video.play();
+            
+            // 再生ボタンを非表示にする
+            playButton.style.display = 'none';
+        }
+    </script>
+
 
     <div id="desktop">
         <!-- CMDプロンプトアイコン -->
