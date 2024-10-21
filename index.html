@@ -262,30 +262,27 @@
                 isDragging = false;
             });
         }
-
-        // コマンド入力の処理
-        function handleCommand(event, appType) {
+// コマンド処理
+        function handleCommand(event) {
             if (event.key === 'Enter') {
-                const input = document.getElementById('cmdInput');
+                const command = document.getElementById('cmdInput').value;
                 const output = document.getElementById('cmdOutput');
-
-                const command = input.value;
-                output.innerHTML += `<div>${command}</div>`; // 入力したコマンドを表示
-
-                // コマンドに応じた処理
-                if (command === 'ping') {
-                    output.innerHTML += `<div>--- ping 統計 ---</div>`;
-                    setTimeout(() => {
-                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
-                    }, 1000);
-                } else if (command.startsWith('ping ')) {
-                    const address = command.split(' ')[1];
-                    output.innerHTML += `<div>--- ${address} ping 統計 ---</div>`;
-                    setTimeout(() => {
-                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
-                    }, 1000);
-                } else {
-                    output.innerHTML += `<div>未定義のコマンド: ${command}</div>`;
+                output.innerHTML += `<div>> ${command}</div>`;
+                
+                // コマンドの処理
+                switch (command.toLowerCase()) {
+                    case 'help':
+                        output.innerHTML += `<div>コマンド一覧: help, ping, clear</div>`;
+                        break;
+                    case 'clear':
+                        output.innerHTML = ''; // 出力エリアをクリア
+                        break;
+                    case command.match(/^ping\s+(\S+)$/)?.input:
+                        const address = command.match(/^ping\s+(\S+)$/)[1];
+                        simulatePing(address, output);
+                        break;
+                    default:
+                        output.innerHTML += `<div>未知のコマンド: ${command}</div>`;
                 }
                 
                 // 入力フィールドをクリア
