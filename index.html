@@ -7,11 +7,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- デスクトップアイコン -->
   <div class="desktop">
-    <div class="icon" onclick="openWindow()">💻 My Computer</div>
-    <div class="icon" onclick="openWindow()">🗑️ Recycle Bin</div>
+    <div class="icon" onclick="openApp('calculator')">🧮 Calculator</div>
+    <div class="icon" onclick="openApp('calendar')">📅 Calendar</div>
+    <div class="icon" onclick="openApp('todo')">📝 Todo List</div>
   </div>
 
+  <!-- タスクバー -->
   <div class="taskbar">
     <div class="start-button" onclick="toggleStartMenu()">Start</div>
     <div class="taskbar-item">Time: <span id="clock">12:34 PM</span></div>
@@ -20,20 +23,72 @@
   <!-- スタートメニュー -->
   <div id="start-menu" class="start-menu hidden">
     <ul>
-      <li onclick="openWindow()">📁 Programs</li>
-      <li>⚙️ Settings</li>
+      <li onclick="openApp('calculator')">🧮 Calculator</li>
+      <li onclick="openApp('calendar')">📅 Calendar</li>
+      <li onclick="openApp('todo')">📝 Todo List</li>
       <li>🔒 Lock</li>
       <li>🔌 Shut Down</li>
     </ul>
   </div>
 
-  <div id="window" class="window hidden">
+  <!-- 電卓アプリ -->
+  <div id="calculator" class="window hidden">
     <div class="window-header">
-      <span>Fake Window</span>
-      <button onclick="closeWindow()">X</button>
+      <span>Calculator</span>
+      <button onclick="closeApp('calculator')">X</button>
     </div>
     <div class="window-body">
-      This is a basic OS window!
+      <input type="text" id="calcDisplay" disabled>
+      <div class="calc-buttons">
+        <button onclick="clearCalc()">C</button>
+        <button onclick="addToCalc('1')">1</button>
+        <button onclick="addToCalc('2')">2</button>
+        <button onclick="addToCalc('3')">3</button>
+        <button onclick="addToCalc('4')">4</button>
+        <button onclick="addToCalc('5')">5</button>
+        <button onclick="addToCalc('6')">6</button>
+        <button onclick="addToCalc('7')">7</button>
+        <button onclick="addToCalc('8')">8</button>
+        <button onclick="addToCalc('9')">9</button>
+        <button onclick="addToCalc('0')">0</button>
+        <button onclick="addToCalc('+')">+</button>
+        <button onclick="addToCalc('-')">-</button>
+        <button onclick="addToCalc('*')">*</button>
+        <button onclick="addToCalc('/')">/</button>
+        <button onclick="calculate()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- カレンダーアプリ -->
+  <div id="calendar" class="window hidden">
+    <div class="window-header">
+      <span>Calendar</span>
+      <button onclick="closeApp('calendar')">X</button>
+    </div>
+    <div class="window-body">
+      <table id="calendarTable">
+        <thead>
+          <tr>
+            <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
+            <th>Thu</th><th>Fri</th><th>Sat</th>
+          </tr>
+        </thead>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Todoリストアプリ -->
+  <div id="todo" class="window hidden">
+    <div class="window-header">
+      <span>Todo List</span>
+      <button onclick="closeApp('todo')">X</button>
+    </div>
+    <div class="window-body">
+      <input type="text" id="todoInput" placeholder="Enter task">
+      <button onclick="addTodo()">Add</button>
+      <ul id="todoList"></ul>
     </div>
   </div>
 
