@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS風ジョークサイト</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="desktop">
+    <div class="icon" onclick="openWindow()">💻 My Computer</div>
+    <div class="icon" onclick="openWindow()">🗑️ Recycle Bin</div>
+  </div>
+
+  <div class="taskbar">
+    <div class="start-button">Start</div>
+    <div class="taskbar-item">Time: <span id="clock">12:34 PM</span></div>
+  </div>
+
+  <div id="window" class="window hidden">
+    <div class="window-header">
+      <span>Fake Window</span>
+      <button id="close-button" onclick="closeWindow()">X</button>
+    </div>
+    <div class="window-body">
+      This is a fake OS window!<br>
+      <button id="move-button" onclick="moveButton()">Don't Click Me!</button>
+    </div>
+  </div>
+
+  <audio id="error-sound" src="error.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
