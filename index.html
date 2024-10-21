@@ -33,12 +33,32 @@
             position: relative;
             height: calc(100vh - 40px);
             background-color: #4a90e2;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .icon {
+            width: 80px;
+            text-align: center;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .icon p {
+            color: white;
+            margin: 5px 0 0 0;
         }
 
         .window {
             position: absolute;
             width: 300px;
-            height: 200px;
+            height: 300px;
             background-color: white;
             border: 1px solid #999;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -69,26 +89,60 @@
             padding: 10px;
             overflow: auto;
         }
+
+        /* 入力フィールドやボタンのスタイル */
+        .input-field {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            padding: 5px 10px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056a3;
+        }
     </style>
 </head>
 <body>
 
     <!-- デスクトップ部分 -->
-    <div id="desktop"></div>
+    <div id="desktop">
+        <!-- アプリアイコン -->
+        <div class="icon" onclick="openWindow('メモ帳')">
+            <img src="https://via.placeholder.com/50" alt="メモ帳">
+            <p>メモ帳</p>
+        </div>
+        <div class="icon" onclick="openWindow('電卓')">
+            <img src="https://via.placeholder.com/50" alt="電卓">
+            <p>電卓</p>
+        </div>
+        <div class="icon" onclick="openWindow('TODOリスト')">
+            <img src="https://via.placeholder.com/50" alt="TODOリスト">
+            <p>TODOリスト</p>
+        </div>
+    </div>
 
     <!-- タスクバー -->
     <div id="taskbar">
-        <div class="taskbar-item" onclick="openWindow()">アプリケーション1</div>
-        <div class="taskbar-item" onclick="openWindow()">アプリケーション2</div>
+        <div class="taskbar-item" onclick="openWindow('メモ帳')">メモ帳</div>
+        <div class="taskbar-item" onclick="openWindow('電卓')">電卓</div>
+        <div class="taskbar-item" onclick="openWindow('TODOリスト')">TODOリスト</div>
     </div>
 
     <script>
         let zIndexCounter = 10;
 
-        function openWindow() {
+        // ウィンドウを開く関数
+        function openWindow(appName) {
             const windowElement = document.createElement('div');
             windowElement.className = 'window';
-            windowElement.style.top = `${Math.random() * (window.innerHeight - 250)}px`;
+            windowElement.style.top = `${Math.random() * (window.innerHeight - 350)}px`;
             windowElement.style.left = `${Math.random() * (window.innerWidth - 300)}px`;
             windowElement.style.zIndex = zIndexCounter++;
 
@@ -96,14 +150,36 @@
             const windowHeader = document.createElement('div');
             windowHeader.className = 'window-header';
             windowHeader.innerHTML = `
-                <span>ウィンドウ</span>
+                <span>${appName}</span>
                 <div class="close-btn" onclick="this.parentElement.parentElement.remove()">×</div>
             `;
 
             // ウィンドウの内容部分
             const windowContent = document.createElement('div');
             windowContent.className = 'window-content';
-            windowContent.textContent = 'ここにアプリの内容が表示されます。';
+
+            // アプリケーションの具体的な内容を設定
+            if (appName === 'メモ帳') {
+                windowContent.innerHTML = `
+                    <h3>メモ帳</h3>
+                    <textarea rows="8" class="input-field" placeholder="メモを入力..."></textarea>
+                    <button class="button" onclick="alert('メモが保存されました')">保存</button>
+                `;
+            } else if (appName === '電卓') {
+                windowContent.innerHTML = `
+                    <h3>電卓</h3>
+                    <input type="text" class="input-field" id="calcInput" placeholder="計算式を入力...">
+                    <button class="button" onclick="calculate()">計算</button>
+                    <p id="calcResult"></p>
+                `;
+            } else if (appName === 'TODOリスト') {
+                windowContent.innerHTML = `
+                    <h3>TODOリスト</h3>
+                    <input type="text" class="input-field" id="todoInput" placeholder="やることを入力...">
+                    <button class="button" onclick="addTodo()">追加</button>
+                    <ul id="todoList"></ul>
+                `;
+            }
 
             windowElement.appendChild(windowHeader);
             windowElement.appendChild(windowContent);
@@ -112,6 +188,7 @@
             makeDraggable(windowElement);
         }
 
+        // ウィンドウをドラッグ可能にする関数
         function makeDraggable(element) {
             let isDragging = false;
             let offsetX, offsetY;
@@ -135,6 +212,28 @@
             document.addEventListener('mouseup', function () {
                 isDragging = false;
             });
+        }
+
+        // 電卓の計算機能
+        function calculate() {
+            const input = document.getElementById('calcInput').value;
+            try {
+                const result = eval(input);
+                document.getElementById('calcResult').innerText = `結果: ${result}`;
+            } catch (e) {
+                document.getElementById('calcResult').innerText = '無効な式です';
+            }
+        }
+
+        // TODOリストに項目を追加する機能
+        function addTodo() {
+            const input = document.getElementById('todoInput').value;
+            if (input) {
+                const li = document.createElement('li');
+                li.textContent = input;
+                document.getElementById('todoList').appendChild(li);
+                document.getElementById('todoInput').value = ''; // 入力フィールドをクリア
+            }
         }
     </script>
 
