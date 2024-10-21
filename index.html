@@ -114,14 +114,36 @@
 <body>
 
     <div id="desktop">
+        <!-- CMDプロンプトアイコン -->
         <div class="icon" onclick="openWindow('CMDプロンプト', 100, 100)">
-            <img src="https://via.placeholder.com/50" alt="CMDプロンプト">
+            <img src="https://via.placeholder.com/50/ff0000/ffffff?text=CMD" alt="CMDプロンプト">
             <p>CMDプロンプト</p>
+        </div>
+        
+        <!-- ファイルエクスプローラーアイコン -->
+        <div class="icon" onclick="openWindow('ファイルエクスプローラー', 200, 100)">
+            <img src="https://via.placeholder.com/50/00ff00/ffffff?text=File" alt="ファイルエクスプローラー">
+            <p>ファイルエクスプローラー</p>
+        </div>
+
+        <!-- メモ帳アイコン -->
+        <div class="icon" onclick="openWindow('メモ帳', 300, 100)">
+            <img src="https://via.placeholder.com/50/0000ff/ffffff?text=Note" alt="メモ帳">
+            <p>メモ帳</p>
+        </div>
+
+        <!-- 設定アイコン -->
+        <div class="icon" onclick="openWindow('設定', 400, 100)">
+            <img src="https://via.placeholder.com/50/ffff00/ffffff?text=Settings" alt="設定">
+            <p>設定</p>
         </div>
     </div>
 
     <div id="taskbar">
-        <div class="taskbar-item" onclick="openWindow('CMDプロンプト', 400, 400)">CMDプロンプト</div>
+        <div class="taskbar-item" onclick="openWindow('CMDプロンプト', 100, 100)">CMDプロンプト</div>
+        <div class="taskbar-item" onclick="openWindow('ファイルエクスプローラー', 200, 100)">ファイルエクスプローラー</div>
+        <div class="taskbar-item" onclick="openWindow('メモ帳', 300, 100)">メモ帳</div>
+        <div class="taskbar-item" onclick="openWindow('設定', 400, 100)">設定</div>
     </div>
 
     <script>
@@ -147,7 +169,7 @@
             const windowContent = document.createElement('div');
             windowContent.className = 'window-content';
             windowContent.innerHTML = `
-                <h3>CMDプロンプト</h3>
+                <h3>${appName}</h3>
                 <div class="cmd-output" id="cmdOutput"></div>
                 <input type="text" class="cmd-input" id="cmdInput" placeholder="コマンドを入力..." onkeydown="handleCommand(event)">
             `;
@@ -220,10 +242,10 @@
             setTimeout(() => {
                 output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=1 ttl=64 time=0.123 ms</div>`;
                 output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=2 ttl=64 time=0.115 ms</div>`;
-                output.innerHTML += `<div>完了: ${address} の ping 結果。</div>`;
-            }, 1000); // 1秒後に結果を表示
+                output.innerHTML += `<div>--- ${address} ping 統計 ---</div>`;
+                output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
+            }, 1000);
         }
     </script>
-
 </body>
 </html>
