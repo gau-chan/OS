@@ -286,7 +286,19 @@
                 }
                 
                 // 入力フィールドをクリア
-                input.value = '';
+                document.getElementById('cmdInput').value = '';
+                output.scrollTop = output.scrollHeight; // スクロールを最新に
+            }
+
+                  // Pingコマンドの模擬実行
+        function simulatePing(address, output) {
+            output.innerHTML += `<div> ${address} に ping を実行中...</div>`;
+            setTimeout(() => {
+                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=1 ttl=64 time=0.123 ms</div>`;
+                output.innerHTML += `<div>${address} は応答しています: 64 バイト from ${address}: icmp_seq=2 ttl=64 time=0.115 ms</div>`;
+                output.innerHTML += `<div>完了: ${address} の ping 結果。</div>`;
+            }, 1000); // 1秒後に結果を表示
+        }
             }
         }
     </script>
