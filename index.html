@@ -1,97 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OS風ウェブサイト</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS風のサイト</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+        }
+
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .taskbar-item {
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        #desktop {
+            position: relative;
+            height: calc(100vh - 40px);
+            background-color: #4a90e2;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background-color: white;
+            border: 1px solid #999;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .window-header {
+            background-color: #0078d7;
+            color: white;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .window-content {
+            padding: 10px;
+            overflow: auto;
+        }
+    </style>
 </head>
 <body>
-  <!-- デスクトップアイコン -->
-  <div class="desktop">
-    <div class="icon" onclick="openApp('calculator')">🧮 Calculator</div>
-    <div class="icon" onclick="openApp('calendar')">📅 Calendar</div>
-    <div class="icon" onclick="openApp('todo')">📝 Todo List</div>
-  </div>
 
-  <!-- タスクバー -->
-  <div class="taskbar">
-    <div class="start-button" onclick="toggleStartMenu()">Start</div>
-    <div class="taskbar-item">Time: <span id="clock">12:34 PM</span></div>
-  </div>
+    <!-- デスクトップ部分 -->
+    <div id="desktop"></div>
 
-  <!-- スタートメニュー -->
-  <div id="start-menu" class="start-menu hidden">
-    <ul>
-      <li onclick="openApp('calculator')">🧮 Calculator</li>
-      <li onclick="openApp('calendar')">📅 Calendar</li>
-      <li onclick="openApp('todo')">📝 Todo List</li>
-      <li>🔒 Lock</li>
-      <li>🔌 Shut Down</li>
-    </ul>
-  </div>
+    <!-- タスクバー -->
+    <div id="taskbar">
+        <div class="taskbar-item" onclick="openWindow()">アプリケーション1</div>
+        <div class="taskbar-item" onclick="openWindow()">アプリケーション2</div>
+    </div>
 
-  <!-- 電卓アプリ -->
-  <div id="calculator" class="window hidden">
-    <div class="window-header">
-      <span>Calculator</span>
-      <button onclick="closeApp('calculator')">X</button>
-    </div>
-    <div class="window-body">
-      <input type="text" id="calcDisplay" disabled>
-      <div class="calc-buttons">
-        <button onclick="clearCalc()">C</button>
-        <button onclick="addToCalc('1')">1</button>
-        <button onclick="addToCalc('2')">2</button>
-        <button onclick="addToCalc('3')">3</button>
-        <button onclick="addToCalc('4')">4</button>
-        <button onclick="addToCalc('5')">5</button>
-        <button onclick="addToCalc('6')">6</button>
-        <button onclick="addToCalc('7')">7</button>
-        <button onclick="addToCalc('8')">8</button>
-        <button onclick="addToCalc('9')">9</button>
-        <button onclick="addToCalc('0')">0</button>
-        <button onclick="addToCalc('+')">+</button>
-        <button onclick="addToCalc('-')">-</button>
-        <button onclick="addToCalc('*')">*</button>
-        <button onclick="addToCalc('/')">/</button>
-        <button onclick="calculate()">=</button>
-      </div>
-    </div>
-  </div>
+    <script>
+        let zIndexCounter = 10;
 
-  <!-- カレンダーアプリ -->
-  <div id="calendar" class="window hidden">
-    <div class="window-header">
-      <span>Calendar</span>
-      <button onclick="closeApp('calendar')">X</button>
-    </div>
-    <div class="window-body">
-      <table id="calendarTable">
-        <thead>
-          <tr>
-            <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
-            <th>Thu</th><th>Fri</th><th>Sat</th>
-          </tr>
-        </thead>
-        <tbody id="calendarBody"></tbody>
-      </table>
-    </div>
-  </div>
+        function openWindow() {
+            const windowElement = document.createElement('div');
+            windowElement.className = 'window';
+            windowElement.style.top = `${Math.random() * (window.innerHeight - 250)}px`;
+            windowElement.style.left = `${Math.random() * (window.innerWidth - 300)}px`;
+            windowElement.style.zIndex = zIndexCounter++;
 
-  <!-- Todoリストアプリ -->
-  <div id="todo" class="window hidden">
-    <div class="window-header">
-      <span>Todo List</span>
-      <button onclick="closeApp('todo')">X</button>
-    </div>
-    <div class="window-body">
-      <input type="text" id="todoInput" placeholder="Enter task">
-      <button onclick="addTodo()">Add</button>
-      <ul id="todoList"></ul>
-    </div>
-  </div>
+            // ウィンドウのヘッダー部分
+            const windowHeader = document.createElement('div');
+            windowHeader.className = 'window-header';
+            windowHeader.innerHTML = `
+                <span>ウィンドウ</span>
+                <div class="close-btn" onclick="this.parentElement.parentElement.remove()">×</div>
+            `;
 
-  <script src="script.js"></script>
+            // ウィンドウの内容部分
+            const windowContent = document.createElement('div');
+            windowContent.className = 'window-content';
+            windowContent.textContent = 'ここにアプリの内容が表示されます。';
+
+            windowElement.appendChild(windowHeader);
+            windowElement.appendChild(windowContent);
+            document.getElementById('desktop').appendChild(windowElement);
+
+            makeDraggable(windowElement);
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            const header = element.querySelector('.window-header');
+
+            header.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                element.style.zIndex = zIndexCounter++;
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                if (isDragging) {
+                    element.style.left = `${e.clientX - offsetX}px`;
+                    element.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', function () {
+                isDragging = false;
+            });
+        }
+    </script>
+
 </body>
 </html>
