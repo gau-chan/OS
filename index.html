@@ -276,13 +276,13 @@
                 if (command === 'ping') {
                     output.innerHTML += `<div>--- ping 統計 ---</div>`;
                     setTimeout(() => {
-                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
+                        output.innerHTML += `<div>応答: バイト数= 32時間 =6ms TLL=54 3 回の送信、2 回の応答、0% パケット損失</div>`;
                     }, 1000);
                 } else if (command.startsWith('ping ')) {
                     const address = command.split(' ')[1];
                     output.innerHTML += `<div>--- ${address} ping 統計 ---</div>`;
                     setTimeout(() => {
-                        output.innerHTML += `<div>2 回の送信、2 回の応答、0% パケット損失</div>`;
+                        output.innerHTML += `<div>応答: バイト数= 32時間 =6ms TLL=54 2回の応答、0% パケット損失</div>`;
                     }, 1000);
                 } else {
                     output.innerHTML += `<div>未定義のコマンド: ${command}</div>`;
