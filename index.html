@@ -108,8 +108,7 @@
             outline: none;
             padding: 5px;
             font-family: monospace;
-        }
-           /* 背景動画のスタイル */
+        }      /* 背景動画のスタイル */
         #background-video {
             position: fixed;
             top: 0;
@@ -118,23 +117,30 @@
             height: 100%;
             object-fit: cover; /* 動画を画面全体にフィットさせる */
             z-index: -1; /* 他のコンテンツの後ろに配置 */
-            display: none; /* 初期は非表示にする */
         }
 
-        /* 再生ボタンのスタイル */
-        #play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.7);
+        #content {
+            position: relative;
+            z-index: 10;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            z-index: 100; /* ボタンを動画の上に表示 */
+            padding: 20px;
         }
+    </style>
+</head>
+<body>
+
+    <!-- 背景動画 -->
+    <video id="background-video" autoplay muted loop>
+        <source src="mylivewallpapers.com-Hatsune-Miku.mp4" type="video/mp4">
+        <source src="background.webm" type="video/webm"> <!-- WebM形式も追加 -->
+        お使いのブラウザは動画タグに対応していません。
+    </video>
+
+    <div id="content">
+        <h1>背景動画のデモ</h1>
+        <p>このページでは背景に動画が自動再生されています。</p>
+    </div>
+
     </style>
 </head>
 <body>
