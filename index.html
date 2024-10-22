@@ -105,6 +105,20 @@
             color: white;
             padding: 5px;
             text-align: center;
+            position: relative;
+        }
+
+        /* 閉じるボタン */
+        .close-btn {
+            position: absolute;
+            right: 5px;
+            top: 3px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 3px 7px;
+            font-size: 12px;
+            cursor: pointer;
         }
 
         /* CMDプロンプトのスタイル */
@@ -127,7 +141,7 @@
 
     <!-- 背景動画 -->
     <video id="background-video" muted loop>
-        <source src="mylivewallpapers.com-Hatsune-Miku.mp4" type="video/mp4">
+        <source src="background.mp4" type="video/mp4">
         <source src="background.webm" type="video/webm">
         お使いのブラウザは動画タグに対応していません。
     </video>
@@ -166,23 +180,35 @@
 
     <!-- ウィンドウ -->
     <div class="window" id="cmdWindow" style="top: 100px; left: 100px;">
-        <div class="window-header">CMDプロンプト</div>
+        <div class="window-header">
+            CMDプロンプト
+            <button class="close-btn" onclick="closeWindow('cmdWindow')">×</button>
+        </div>
         <div id="cmdOutput"></div>
         <input type="text" id="cmdInput" placeholder="コマンドを入力" onkeydown="handleCommand(event)">
     </div>
 
     <div class="window" id="explorerWindow" style="top: 200px; left: 400px;">
-        <div class="window-header">ファイルエクスプローラー</div>
+        <div class="window-header">
+            ファイルエクスプローラー
+            <button class="close-btn" onclick="closeWindow('explorerWindow')">×</button>
+        </div>
         <p>ファイル一覧などを表示</p>
     </div>
 
     <div class="window" id="notepadWindow" style="top: 300px; left: 700px;">
-        <div class="window-header">メモ帳</div>
+        <div class="window-header">
+            メモ帳
+            <button class="close-btn" onclick="closeWindow('notepadWindow')">×</button>
+        </div>
         <textarea style="width: 100%; height: 150px;"></textarea>
     </div>
 
     <div class="window" id="settingsWindow" style="top: 400px; left: 1000px;">
-        <div class="window-header">設定</div>
+        <div class="window-header">
+            設定
+            <button class="close-btn" onclick="closeWindow('settingsWindow')">×</button>
+        </div>
         <p>各種設定項目</p>
     </div>
 
@@ -206,33 +232,38 @@
             }
         }
 
+        // ウィンドウを閉じる
+        function closeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+
         // ウィンドウをドラッグ可能にする
         function makeDraggable(element) {
             let isDragging = false;
             let offsetX, offsetY;
 
-            element.querySelector('.window-header').addEventListener('mousedown', function (e) {
+            element.querySelector('.window-header').addEventListener('mousedown', (e) => {
                 isDragging = true;
                 offsetX = e.clientX - element.getBoundingClientRect().left;
                 offsetY = e.clientY - element.getBoundingClientRect().top;
             });
 
-            document.addEventListener('mousemove', function (e) {
+            document.addEventListener('mousemove', (e) => {
                 if (isDragging) {
                     element.style.left = `${e.clientX - offsetX}px`;
                     element.style.top = `${e.clientY - offsetY}px`;
                 }
             });
 
-            document.addEventListener('mouseup', function () {
+            document.addEventListener('mouseup', () => {
                 isDragging = false;
             });
         }
 
-        // すべてのウィンドウにドラッグ機能を追加
+        // 各ウィンドウをドラッグ可能にする
         document.querySelectorAll('.window').forEach(makeDraggable);
 
-        // コマンド入力処理
+        // CMDのコマンド処理
         function handleCommand(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('cmdInput');
