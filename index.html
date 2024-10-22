@@ -20,7 +20,7 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
-            display: none; /* 初期状態では非表示 */
+            display: none;
         }
 
         /* 再生ボタン */
@@ -38,6 +38,53 @@
             z-index: 100;
         }
 
+        /* デスクトップアイコンのスタイル */
+        .desktop-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .desktop-icon img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .desktop-icon p {
+            margin: 0;
+            font-size: 12px;
+            color: white;
+        }
+
+        /* タスクバー */
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 10px;
+            z-index: 100;
+        }
+
+        /* タスクバーのアイコン */
+        .taskbar-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
         /* ウィンドウの基本スタイル */
         .window {
             position: absolute;
@@ -48,6 +95,7 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             z-index: 10;
             padding: 10px;
+            display: none; /* 初期状態では非表示 */
         }
 
         /* ウィンドウのヘッダー */
@@ -79,13 +127,42 @@
 
     <!-- 背景動画 -->
     <video id="background-video" muted loop>
-        <source src="mylivewallpapers.com-Hatsune-Miku.mp4" type="video/mp4">
+        <source src="background.mp4" type="video/mp4">
         <source src="background.webm" type="video/webm">
         お使いのブラウザは動画タグに対応していません。
     </video>
 
     <!-- 再生ボタン -->
     <button id="play-button" onclick="playVideo()">背景動画を再生</button>
+
+    <!-- デスクトップアイコン -->
+    <div class="desktop-icon" style="top: 50px; left: 50px;" onclick="toggleWindow('cmdWindow')">
+        <img src="cmd-icon.png" alt="CMD">
+        <p>CMD</p>
+    </div>
+
+    <div class="desktop-icon" style="top: 50px; left: 150px;" onclick="toggleWindow('explorerWindow')">
+        <img src="explorer-icon.png" alt="Explorer">
+        <p>Explorer</p>
+    </div>
+
+    <div class="desktop-icon" style="top: 50px; left: 250px;" onclick="toggleWindow('notepadWindow')">
+        <img src="notepad-icon.png" alt="Notepad">
+        <p>Notepad</p>
+    </div>
+
+    <div class="desktop-icon" style="top: 50px; left: 350px;" onclick="toggleWindow('settingsWindow')">
+        <img src="settings-icon.png" alt="Settings">
+        <p>Settings</p>
+    </div>
+
+    <!-- タスクバー -->
+    <div id="taskbar">
+        <img src="cmd-icon.png" alt="CMD" class="taskbar-icon" onclick="toggleWindow('cmdWindow')">
+        <img src="explorer-icon.png" alt="Explorer" class="taskbar-icon" onclick="toggleWindow('explorerWindow')">
+        <img src="notepad-icon.png" alt="Notepad" class="taskbar-icon" onclick="toggleWindow('notepadWindow')">
+        <img src="settings-icon.png" alt="Settings" class="taskbar-icon" onclick="toggleWindow('settingsWindow')">
+    </div>
 
     <!-- ウィンドウ -->
     <div class="window" id="cmdWindow" style="top: 100px; left: 100px;">
@@ -117,6 +194,16 @@
             video.style.display = 'block';
             video.play();
             playButton.style.display = 'none';
+        }
+
+        // ウィンドウを開閉する関数
+        function toggleWindow(windowId) {
+            var window = document.getElementById(windowId);
+            if (window.style.display === 'none' || window.style.display === '') {
+                window.style.display = 'block';
+            } else {
+                window.style.display = 'none';
+            }
         }
 
         // ウィンドウをドラッグ可能にする
